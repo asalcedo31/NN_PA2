@@ -1,0 +1,115 @@
+\documentclass[12pt,letterpaper]{article} % script-article class - I like this better than article
+\usepackage[margin=0.75in]{geometry}
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+
+\usepackage{helvet}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{mathtools}
+\usepackage{amssymb,amsmath}
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays \left(eg matrices\right) in math
+\usepackage{paralist} % very flexible & customisable lists \left(eg. enumerate/itemize, etc.\right)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+%\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+%\usepackage{caption}
+\usepackage{fixltx2e}% this might give you a warning; ignore it
+%\usepackage{dblfloatfix}
+\usepackage{float}
+\usepackage{bbm}
+\usepackage[space]{grffile}
+\usepackage[section]{placeins}
+\usepackage[justification=justified,singlelinecheck=false]{caption}
+
+\captionsetup[figure]{labelformat=empty}
+
+\newcommand{\bs}[1]{\bm{\mathrm{#1}}} % always use this custom command when you want to use boldface font in a math (equation, $__$ etc.) environment.
+\newcommand{\switch}[0]{\mathbbm{1}\{y_k=k\}}
+\renewcommand{\epsilon}{\varepsilon}
+
+% the following are custom commands for quickly writing derivatives and partial derivatives
+\newcommand{\ddt}[1]{\ensuremath{\dfrac{d#1}{dt}}}
+\newcommand{\ddx}[1]{\ensuremath{\dfrac{d#1}{dx}}}
+\newcommand{\ddy}[1]{\ensuremath{\dfrac{d#1}{dy}}}
+\newcommand{\ddz}[1]{\ensuremath{\dfrac{d#1}{dz}}}
+
+\newcommand{\pardt}[1]{\ensuremath{\dfrac{\partial#1}{\partial t}}}
+\newcommand{\pardx}[1]{\ensuremath{\dfrac{\partial#1}{\partial x}}}
+\newcommand{\pardy}[1]{\ensuremath{\dfrac{\partial#1}{\partial y}}}
+\newcommand{\pardz}[1]{\ensuremath{\dfrac{\partial#1}{\partial z}}}
+
+\newcommand{\pardtsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial t^2}}}
+\newcommand{\pardxsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial x^2}}}
+\newcommand{\pardysq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial y^2}}}
+\newcommand{\pardzsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial z^2}}}
+
+\newcommand{\curl}[1]{\ensuremath{\nabla\times\bs{#1}}}
+
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+
+%=====================
+
+\title{\Large Assignment 2}
+\author{\large Adriana Salcedo}
+\date{\large \today}
+
+\begin{document}
+\maketitle
+
+\section{A}
+\subsection{Q1}
+
+There are six convolution layers. If we consider each filter as two-dimensional and filters for each channel as distinct filters with kernel size k the network has the following inputs, outputs and number of filters:
+
+\begin{table}[]
+\begin{tabular}{lllll}
+layer     & input channels & number of output channels & number of filters & filter size k x k \\
+downconv1 & 1              & 32                        & 32                & 3x3         \\
+downconv2 & 32             & 64                        & 2048              & 3x3         \\
+rfconv    & 64             & 64                        & 4096              & 3x3         \\
+upconv1   & 64             & 32                        & 2048              & 3x3         \\
+upconv2   & 32             & 3                         & 96                & 3x3         \\
+finalcov  & 3              & 3                         & 9                 & 3x3        
+\end{tabular}
+\end{table}
+
+Equivalently, if we consider each filter as three dimensional, and the number of channels is C:
+
+\begin{table}[]
+\begin{tabular}{llll}
+layer     & input channels & number of filters & filter size k x k x C \\
+downconv1 & 1              & 32                & 3x3x1                 \\
+downconv2 & 32             & 64                & 3x3x32                \\
+rfconv    & 64             & 64                & 3x3x64                \\
+upconv1   & 64             & 32                & 3x3x64                \\
+upconv2   & 32             & 3                 & 3x3x32                \\
+finalcov  & 3              & 3                 & 3x3x3                
+\end{tabular}
+\end{table}
+
+\subsection{Q2}
+We are training for 25 epochs.
+
+\subsection{Q3}
+Increasing the loss lowers the final accuracy and improves the colourization quality of the output images up to a point, beyond which final training loss continues to decrease slightly but validation loss begins to increase, indicative of overfitting. Loss improvements are the largest when starting from a small number of epochs and decrease as the number of epochs increases. Increasing the number of epochs  from 25 to 50 by reduces the final training and validation loss by 0.0006 and 0.0008, respectively, increasing the number of epochs from 50 to 100 reduces training and validation further reduces loss by 0.001 and 0.0009, respectively, but increasing the number of epochs from 100 to 200 only reduces final training loss and increases the validation loss to that obtained after 50 epochs. The resulting test images after 100 epochs most closely match the targets, images after 500 epochs show added noise.
+
+\subsection{Q4}
+
+RGB is problematic for two reasons. Firstly, it is not an absolute colour space so it is device dependent and colours may be percieved differently on different devices [1]. More problematic for colourization through regression, it is not perceptually uniform so distances in RGB space do not correspond to the colour differences humans percieve [2]. Minimizing the euclidian distance in RGB as the loss may not minize the percieved colour differences in the resulting images. 
+
+\subsection{Q5}
+Colourization through classification mitigates these problems because it allows us to minimize the cross-entropy loss between discretely defined colours. Depending on how the colours are discretized, discrete colour matching may be less sensitive to discrepancies between RGB colour distance and the human percieved colour match. 
+
+%https://pdfs.semanticscholar.org/c68c/f46bcfe46440ff5b2928932861ea94fc4db9.pdf
+
+\section{B}
+
+\subsection{Q2}
+
+With the same batch size and the same number of epochs, the resulting images from the classification regression show far less detail in colours than those resulting from colourization through regression. However, the classification colourization show some colour contrast wheras the regression images are uniformly dull. The classification images also show misclassification errors more clearly than those from colourization from regression, for example colouring roads green.
+
+ \section{Q3}
