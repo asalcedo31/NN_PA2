@@ -112,4 +112,39 @@ Colourization through classification mitigates these problems because it allows 
 
 With the same batch size and the same number of epochs, the resulting images from the classification regression show far less detail in colours than those resulting from colourization through regression. However, the classification colourization show some colour contrast wheras the regression images are uniformly dull. The classification images also show misclassification errors more clearly than those from colourization from regression, for example colouring roads green.
 
- \section{Q3}
+\section{C}
+
+\subsection{Q2}
+
+The ouput images from UNet show some improvements in colourization accuracy. For example, in some images areas of grass or sky are coloured correctly in the UNet but not the CNN output. However, many colourization errors remain in the UNet and UNet introduces some unique errors as well. Overall, UNet qualitatively improves images sligtly. Correspondingly, the final validation UNet loss is lower than the final validation CNN loss (1.64 vs 1.81) and accuracy is modestly higher (40\% vs 36\%). Skip connections can improve accuracy because they allow information from earlier layers which has a higher resolution and may preserve more details to enter later layers that operate at a lower resolution with more abstract image features. Additionally, skip connections can also keep gradients from vanishing or exploding in a network with many layers[3].
+
+\subsection{Q3}
+Decreasing batch size decreases the final training and validation loss and improves accuracy as well as image output. Validation loss with batch size=25 is 1.51 while for batch size=200 it is 1.85. Outputs with batch size=25 show better classification than larger batch size outputs. They correctly classify different shades of brown on a horse, wheras images from larger batch sizes only correctly classify colours that occupy larger areas such as the grass and the sky while the horses remain grey. Smaller batch size images also don't make classification errors such as placing green on top of a horse, which are common at batch size=50 and batch size=100.
+
+\section{D}
+\subsection{Q1}
+It is 1/16 the resolution of the original image.
+
+\subsection{Q2}
+The output from the UNet shows superior accuracy to that of the CNN. Unlike the UNet, the CNN often mistakes different colours which occur in a similar context (eg placing green on roads or beige on grass). When several similar colours occur on a single object (eg a horse), the UNet is able to place these colours more accurately than the CNN. Both convulutional neural net outputs show much clearer object boundaries than the bilinear interpolation outputs which are blury. Unlike bilinear interpolation, they leverage high resolution training targets to optimize weights to increase the correspondence between the low and the high resolution images. This allows them to learn complex mappings particular from the entire set of training images which cannot be captured by averaging pixel values (eg textures). Convolutional neural nets can also learn non-linearities in the images (eg non-linear colour transitions), unlike bi-linear interpolation which only averages across x and y pixel values. 
+
+\section{E}
+\subsection{Q1}
+Activations in the first few layers, particularly the first convolution layer are more interpretable and mostly seem to learn to detect the shape of a horse head. Intermediate layers are much more abstract and their target sometimes seems to be larger patches in the image that may correspond to colours or it is not apparent. There is also a greater diversity in filters than in early layers. Activations in the last layer are once again more interpretable and the shape of a horse's head is apparent in some of the filters.
+\subsection{Q2}
+
+\section{F}
+\subsection{Q1}
+\begin{itemize}
+	\item Kernel size
+	\item Max-pooling size
+	\item The number of filters
+	\item Kernel stride
+	\item The number of output channels in the intermediate layers
+\end{itemize}
+\subsection{Q2}
+The output of the CNN is duller if we switch the max-pooling and ReLu layers. Some patches that were previously coloured now appear grey. This makes sense because max-pooling will reduce the resolution and potentially dampen contrasts before ReLu is applied. If these signals are informative for colourization, reducing the resolution would then lead to duller colours in the output image. 
+\subsection{Q3}
+To improve evaluation based on human assessment, higher level features could be used to assess loss. Per-pixel loss can be disrupted by small translations and does not capture the perceived object identity. Johnson \textit{et al.} proposed using pre-trained image classification networks to define high level features that better correspond to perceived loss. We could use the approach they propose of comparing the Euclidian distance between the feature maps for a given layer when processing the target and predicted outputs or the correspondence between covariances among points in a feature map for a given layer between the predicted and target outputs.
+\subsection{Q4}
+In order for the CNN to work with images that are larger than 32 x 32 we would first have to downsample the image to 32 x 32 prior to the first convolution layer. We could do this by averaging appro 
