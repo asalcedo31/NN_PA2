@@ -1,0 +1,116 @@
+\documentclass[12pt,letterpaper]{article} % script-article class - I like this better than article
+\usepackage[margin=0.75in]{geometry}
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+
+\usepackage{helvet}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{mathtools}
+\usepackage{amssymb,amsmath}
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays \left(eg matrices\right) in math
+\usepackage{paralist} % very flexible & customisable lists \left(eg. enumerate/itemize, etc.\right)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+%\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+%\usepackage{caption}
+\usepackage{fixltx2e}% this might give you a warning; ignore it
+%\usepackage{dblfloatfix}
+\usepackage{float}
+\usepackage{bbm}
+\usepackage[space]{grffile}
+\usepackage[section]{placeins}
+\usepackage[justification=justified,singlelinecheck=false]{caption}
+\usepackage{pdflscape}
+\captionsetup[figure]{labelformat=empty}
+
+\newcommand{\bs}[1]{\bm{\mathrm{#1}}} % always use this custom command when you want to use boldface font in a math (equation, $__$ etc.) environment.
+\newcommand{\switch}[0]{\mathbbm{1}\{y_k=k\}}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\sumj}{\sum_j}
+
+% the following are custom commands for quickly writing derivatives and partial derivatives
+\newcommand{\ddt}[1]{\ensuremath{\dfrac{d#1}{dt}}}
+\newcommand{\ddx}[1]{\ensuremath{\dfrac{d#1}{dx}}}
+\newcommand{\ddy}[1]{\ensuremath{\dfrac{d#1}{dy}}}
+\newcommand{\ddz}[1]{\ensuremath{\dfrac{d#1}{dz}}}
+
+\newcommand{\pardt}[1]{\ensuremath{\dfrac{\partial#1}{\partial t}}}
+\newcommand{\pardx}[1]{\ensuremath{\dfrac{\partial#1}{\partial x}}}
+\newcommand{\pardy}[1]{\ensuremath{\dfrac{\partial#1}{\partial y}}}
+\newcommand{\pardz}[1]{\ensuremath{\dfrac{\partial#1}{\partial z}}}
+
+\newcommand{\pardtsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial t^2}}}
+\newcommand{\pardxsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial x^2}}}
+\newcommand{\pardysq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial y^2}}}
+\newcommand{\pardzsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial z^2}}}
+
+\newcommand{\curl}[1]{\ensuremath{\nabla\times\bs{#1}}}
+
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+
+%opening
+
+\title{\Large Homework 3}
+\author{\large Adriana Salcedo}
+\date{\large \today}
+
+\begin{document}
+\maketitle
+\section{}
+\subsection{}
+Expectation:
+
+\begin{align}
+&E[y] = E[\sum_j m_jw_jx_j] \\
+&= \sum_jE[m_jw_jx_j]\\
+&= \sum_jE[m_j]\sumj E[w_jx_j]\\
+&=\frac{1}{2}\sumj E[w_jx_j]\\
+&=\frac{1}{2}E[\sumj w_j\sumj x_j]\\
+&\text{As } w_j \text{and } x_j \text{are constants we assume }E[\sumj w_j]=\sumj w_j, E[\sumj x_j]=\sumj x_j, Cov(\sumj x_j,\sumj w_j) = 0\\
+&=\frac{1}{2}\sumj w_j \sumj x_j\\
+&=\frac{1}{2}\bs{w}^T\bs{x}
+\end{align}
+Variance:
+\begin{align}
+&Var[y] = Var[\sum_j m_jw_jx_j] \\
+&\text{As variances are additive for random variables (m)}\\
+&Var[y] = \sumj\big[ Var[m_jw_jx_j]\big] \\
+&Var[y] = \sumj\big[ E[(m_jw_jx_j)^2] - E[m_jw_jx_j]^2\big] \\
+&Var[y] = \sumj\big[ E[m_j^2]E[w_j^2x_j^2] - (\frac{1}{2}(w_jx_j)^2\big] \\
+&Var[y] = \sumj\big[(E[m_j]^2+Var[m_j])E[w_j^2x_j^2] - (\frac{1}{2}w_jx_j)^2\big] \\
+&Var[y] = \sumj\big[(\frac{1}{4}+\frac{1}{4})E[(w_jx_j)^2] - (\frac{1}{4}(w_jx_j)^2\big] \\
+&Var[y] = \sumj\big(\frac{1}{2}w_j^2x_j^2-\frac{1}{4}w_j^2x_j^2\big] \\
+&Var[y] = \frac{1}{4}\sumj w_j^2x_j^2 
+\end{align}
+\subsection{}
+\begin{align}
+&E[y] = E[\sum_j m_jw_jx_j]= \sumj \tilde{w}_jx_j \\
+&\sumj E[m_jw_jx_j]= \sumj \tilde{w}_jx_j \\
+&\sumj E[m_j]E[w_jx_j]= \sumj \tilde{w}_jx_j \\
+&\frac{1}{2}\sumj E[w_jx_j]= \sumj \tilde{w}_jx_j \\
+&\frac{1}{2}E[\sumj w_jx_j]= \sumj \tilde{w}_jx_j \\
+&\text{As } w_j \text{and } x_j \text{are constants we assume }E[\sumj w_j]=\sumj w_j, E[\sumj x_j]=\sumj x_j, Cov(\sumj x_j,\sumj w_j) = 0\\
+&\frac{1}{2}E[\sumj w_j]E[\sumj x_j]= \sumj \tilde{w}_jx_j \\
+&\frac{1}{2}E[\sumj w_j]E[\sumj x_j]= \sumj \tilde{w}_jx_j \\
+&\frac{1}{2}\sumj w_j\sumj x_j = \sumj \tilde{w}_j \sumj x_j \\
+&\frac{1}{2}\sumj w_j = \sumj\tilde{w}_j
+\end{align}
+\subsection{}
+\begin{align}
+&\frac{1}{2N}\sum_{i=1}^N\big[E[(y^{(i)}-t^{(i)})^2] \big]\\
+&\frac{1}{2N}\sum_{i=1}^N\big[E[y^{(i)2}-2y^{(i)}t^{(i)} + t^{(i)2}] \big]\\
+&\frac{1}{2N}\sum_{i=1}^N\big[E[y^{(i) 2}]-2E[y^{(i)}]E[t^{(i)}]+ E[t^{(i) 2}] \big]\\
+&\frac{1}{2N}\sum_{i=1}^N\big[E[y^{(i) 2}]-2E[y^{(i)}]t^{(i)}+ t^{(i) 2} \big]\\
+&\frac{1}{2N}\sum_{i=1}^N\big[E[y^{(i)}]^ 2+Var[y^{(i)}]-2E[y^{(i)}]t^{(i)}+ t^{(i) 2} \big]\\
+&\frac{1}{2N}\sum_{i=1}^N\big[\tilde{y}^{(i) 2}-2\tilde{y}^{(i)}t^{(i)}+ t^{(i) 2} +Var[y^{(i)}] \big]\\
+&\frac{1}{2N}\sum_{i=1}^N\big[(\tilde{y}^{(i)}-t^{(i)})^2 + \frac{1}{4}\sumj w_j^2x_j^2 \big] \text{  ,using (18)}\\
+&\frac{1}{2N}\sum_{i=1}^N\big[(\tilde{y}^{(i)}-t^{(i)})^2 + \frac{1}{4}\sumj (2\tilde{w})^2x_j^2 \big]\text{  ,using (27)} \\
+&\frac{1}{2N}\sum_{i=1}^N\big[(\tilde{y}^{(i)}-t^{(i)})^2 + \sumj (\tilde{w})^2x_j^2 \big] \\
+&\text{If }\mathcal{R}(\tilde{w_1}...\tilde{w_D}) =\frac{1}{2N}\sum_{i=1}^N \sumj (\tilde{w})^2x_j^2:\\
+&\frac{1}{2N}\sum_{i=1}^N\big[E[(y^{(i)}-t^{(i)})^2] \big] = (\tilde{y}^{(i)}-t^{(i)})^2 + \mathcal{R}(\tilde{w_1}...\tilde{w_D}) \\
+\end{align}
+\end{document}
