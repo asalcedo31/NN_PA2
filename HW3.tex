@@ -24,6 +24,20 @@
 \usepackage[justification=justified,singlelinecheck=false]{caption}
 \usepackage{pdflscape}
 \captionsetup[figure]{labelformat=empty}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usetikzlibrary{calc}
+\pagenumbering{gobble}
+\usepackage{array}
+\usepackage{adjustbox}
+\usetikzlibrary{positioning,fit}
+\geometry{letterpaper,margin=0.5in}
+\newcommand\addvmargin[1]{
+  \node[fit=(current bounding box),inner ysep=#1,inner xsep=0]{};
+}
+
 
 \newcommand{\bs}[1]{\bm{\mathrm{#1}}} % always use this custom command when you want to use boldface font in a math (equation, $__$ etc.) environment.
 \newcommand{\switch}[0]{\mathbbm{1}\{y_k=k\}}
@@ -82,7 +96,7 @@ Variance:
 &Var[y] = \sumj\big[ E[(m_jw_jx_j)^2] - E[m_jw_jx_j]^2\big] \\
 &Var[y] = \sumj\big[ E[m_j^2]E[w_j^2x_j^2] - (\frac{1}{2}(w_jx_j)^2\big] \\
 &Var[y] = \sumj\big[(E[m_j]^2+Var[m_j])E[w_j^2x_j^2] - (\frac{1}{2}w_jx_j)^2\big] \\
-&Var[y] = \sumj\big[(\frac{1}{4}+\frac{1}{4})E[(w_jx_j)^2] - (\frac{1}{4}(w_jx_j)^2\big] \\
+&Var[y] = \sumj\big[(\frac{1}{4}+\frac{1}{4})E[(w_jx_j)^2] - (\frac{1}{4}w_jx_j)^2\big] \\
 &Var[y] = \sumj\big(\frac{1}{2}w_j^2x_j^2-\frac{1}{4}w_j^2x_j^2\big] \\
 &Var[y] = \frac{1}{4}\sumj w_j^2x_j^2 
 \end{align}
@@ -109,8 +123,11 @@ Variance:
 &\frac{1}{2N}\sum_{i=1}^N\big[\tilde{y}^{(i) 2}-2\tilde{y}^{(i)}t^{(i)}+ t^{(i) 2} +Var[y^{(i)}] \big]\\
 &\frac{1}{2N}\sum_{i=1}^N\big[(\tilde{y}^{(i)}-t^{(i)})^2 + \frac{1}{4}\sumj w_j^2x_j^2 \big] \text{  ,using (18)}\\
 &\frac{1}{2N}\sum_{i=1}^N\big[(\tilde{y}^{(i)}-t^{(i)})^2 + \frac{1}{4}\sumj (2\tilde{w})^2x_j^2 \big]\text{  ,using (27)} \\
-&\frac{1}{2N}\sum_{i=1}^N\big[(\tilde{y}^{(i)}-t^{(i)})^2 + \sumj (\tilde{w})^2x_j^2 \big] \\
-&\text{If }\mathcal{R}(\tilde{w_1}...\tilde{w_D}) =\frac{1}{2N}\sum_{i=1}^N \sumj (\tilde{w})^2x_j^2:\\
+&\frac{1}{2N}\sum_{i=1}^N\big[(\tilde{y}^{(i)}-t^{(i)})^2 + \sumj \tilde{w}^2x_j^2 \big] \\
+&\text{If }\mathcal{R}(\tilde{w_1}...\tilde{w_D}) =\frac{1}{2N}\sum_{i=1}^N \sumj \tilde{w}^2x_j^2:\\
 &\frac{1}{2N}\sum_{i=1}^N\big[E[(y^{(i)}-t^{(i)})^2] \big] = (\tilde{y}^{(i)}-t^{(i)})^2 + \mathcal{R}(\tilde{w_1}...\tilde{w_D}) \\
 \end{align}
 \end{document}
+
+\section{}
+Assuming all inputs are connected to all hidden units and all hidden units $h_{t-1}$ are fully connected to all hidden units h_t
