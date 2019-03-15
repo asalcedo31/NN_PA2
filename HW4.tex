@@ -1,0 +1,155 @@
+\documentclass[12pt,letterpaper]{article} % script-article class - I like this better than article
+\usepackage[margin=0.75in]{geometry}
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+
+\usepackage{helvet}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb,amsmath}
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays \left(eg matrices\right) in math
+\usepackage{paralist} % very flexible & customisable lists \left(eg. enumerate/itemize, etc.\right)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+%\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+%\usepackage{caption}
+\usepackage{fixltx2e}% this might give you a warning; ignore it
+%\usepackage{dblfloatfix}
+\usepackage{float}
+\usepackage{bbm}
+\usepackage[space]{grffile}
+\usepackage[section]{placeins}
+\usepackage[justification=justified,singlelinecheck=false]{caption}
+
+\captionsetup[figure]{labelformat=empty}
+
+\newcommand{\bs}[1]{\bm{\mathrm{#1}}} % always use this custom command when you want to use boldface font in a math (equation, $__$ etc.) environment.
+\newcommand{\switch}[0]{\mathbbm{1}\{y_k=k\}}
+\renewcommand{\epsilon}{\varepsilon}
+
+% the following are custom commands for quickly writing derivatives and partial derivatives
+\newcommand{\ddt}[1]{\ensuremath{\dfrac{d#1}{dt}}}
+\newcommand{\ddx}[1]{\ensuremath{\dfrac{d#1}{dx}}}
+\newcommand{\ddy}[1]{\ensuremath{\dfrac{d#1}{dy}}}
+\newcommand{\ddz}[1]{\ensuremath{\dfrac{d#1}{dz}}}
+
+\newcommand{\pardt}[1]{\ensuremath{\dfrac{\partial#1}{\partial t}}}
+\newcommand{\pardx}[1]{\ensuremath{\dfrac{\partial#1}{\partial x}}}
+\newcommand{\pardy}[1]{\ensuremath{\dfrac{\partial#1}{\partial y}}}
+\newcommand{\pardz}[1]{\ensuremath{\dfrac{\partial#1}{\partial z}}}
+
+\newcommand{\pardtsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial t^2}}}
+\newcommand{\pardxsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial x^2}}}
+\newcommand{\pardysq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial y^2}}}
+\newcommand{\pardzsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial z^2}}}
+
+\newcommand{\curl}[1]{\ensuremath{\nabla\times\bs{#1}}}
+
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\makeatletter
+\newcommand*\rel@kern[1]{\kern#1\dimexpr\macc@kerna}
+\newcommand*\widebar[1]{%
+  \begingroup
+  \def\mathaccent##1##2{%
+    \rel@kern{0.8}%
+    \overline{\rel@kern{-0.8}\macc@nucleus\rel@kern{0.2}}%
+    \rel@kern{-0.2}%
+  }%
+  \macc@depth\@ne
+  \let\math@bgroup\@empty \let\math@egroup\macc@set@skewchar
+  \mathsurround\z@ \frozen@everymath{\mathgroup\macc@group\relax}%
+  \macc@set@skewchar\relax
+  \let\mathaccentV\macc@nested@a
+  \macc@nested@a\relax111{#1}%
+  \endgroup
+}
+\makeatother
+
+%=====================
+
+\title{\Large Homework 1}
+\author{\large Adriana Salcedo}
+\date{\large \today}
+
+\begin{document}
+\maketitle
+
+\section{}
+\subsection{}
+\begin{align*}
+&\widebar{\mathcal{L}} = 1\\
+%
+&\widebar{h^{(t)}} = \widebar{\mathcal{L}}\dfrac{\partial \mathcal{L}}{\partial h^{(t)}} + \widebar{g^{(t+1)}}\dfrac{\partial g^{(t+1)}}{\partial h^{(t)}} + \widebar{i^{(t+1)}}\dfrac{\partial i^{(t+1)}}{\partial h^{(t)}} + \widebar{f^{(t+1)}}\dfrac{\partial f^{(t+1)}}{\partial h^{(t)}} + \widebar{o^{(t+1)}}\dfrac{\partial o^{(t+1)}}{\partial h^{(t)}}\\
+%
+&\widebar{h^{(t)}} = \widebar{\mathcal{L}}\dfrac{\partial \mathcal{L}}{\partial h^{(t})} + \widebar{g^{(t+1)}}tanh'(w_{gx}x^{t+1}+w_{gh}h^{(t)})w_{gh} + \widebar{i^{(t+1)}}\sigma'(w_{ix}x^{t+1}+w_{ih}h^{(t)})w_{ih}\\ &+ \widebar{f^{(t+1)}}\sigma'(w_{fx}x^{t+1}+w_{fh}h^{(t)})w_{fh}+ \widebar{o^{(t+1)}}\sigma'(w_{ox}x^{t+1}+w_{oh}h^{(t)})w_{oh} \\\\%+ \widebar{f^{(t+1)}}\dfrac{\partial f^{(t+1)}}{\partial h^{(t})} + \widebar{o^{(t+1)}}\dfrac{\partial o^{(t+1)}}{\partial h^{(t})}\\
+%
+&\widebar{c^{(t)}} = \widebar{h^{(t)}}o^{(t)}tanh'(c^t) + \widebar{c^{(t+1)}}f^{(t+1)}\\\\
+&\widebar{g^{(t)}} = \widebar{c^{(t)}}i^{(t)}\\\\
+&\widebar{o^{(t)}} = \widebar{h^{(t)}}\\\\
+&\widebar{f^{(t)}} = \widebar{c^{(t)}}c^{(t-1)}\\\\
+&\widebar{i^{(t)}} = \widebar{c^{(t)}}g^{(t)}\\\\
+\end{align*}
+\subsection{}
+\begin{align*}
+\widebar{w_{ix}} = \Sigma_{t=1}^{t}\widebar{i^{(t)}}\sigma'(w_{ix}x^{(t)}+w_{ih}h^{(t-1)})x^{(t)}
+\end{align*}
+
+\section{}
+\subsection{}
+The architecture has ( HxD + HxH + HxH) weights at each time step that are shared across all time steps so it is O(HxD). At each time step the arithmetic operations are $(\phi\big ( O((HD))G^2 + O((HH)G^2) + O((HH)G^2) \big))$ and is of O((H x H x D)$G^2)$.
+\subsection{}
+A minimum of G+G-1 steps are needed to compute the hidden activations. This can be achieved by starting at the upper left hand corner of the image. At the next time step, all activations adjacent to it can be computed simultaneously as they are independent given the activation computed at the previous time step. If all the activations are computed in this fashion, proceeding in diagonal "stripes" from the upper left hand corner of the hidden laer to the lower right hand corner, it would take G + G -1 step to compute all the activations. 
+
+\subsection{}
+One advantage of the MDRNN is that it can learn dependencies from left to right on an image which can be useful in some applications such as cursive handwriting recognition. One disadvantage is that the context of a hidden activation is limited to the area of the image to the left and above it, and so it cannot learn higher level features that can span the full image like conv nets can. 
+
+\section{}
+\subsection{a}
+
+\subsection{b}
+\begin{align*}
+\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{p}^k} = \beta \bs{I} - \alpha \dfrac{\partial \nabla \mathcal{J}\bs{\theta}_k}{\partial \bs{p}^k}\\
+\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{p}^k} = \beta\bs{I} - \alpha \bs{G}\dfrac{\partial \bs{\theta}_k}{\partial \bs{p}^k}\\
+\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{p}^k} = \beta\bs{I} - \alpha \bs{G}\bs{I}
+\end{align*}
+
+\begin{align*}
+\dfrac{\partial \bs{\theta}^{(k+1)}}{\partial \bs{\theta}^k} =  \bs{I} + \dfrac{\partial \bs{p}^k}{\partial \bs{\theta}^k}\\
+\dfrac{\partial \bs{\theta}^{(k+1)}}{\partial \bs{\theta}^k} =  \bs{I}  - \alpha\bs{G}\bs{I}\\
+\end{align*}
+
+\begin{align*}
+\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{\theta}^k} = \beta (\bs{\theta}^k-\bs{\theta}^{k-1}) - \alpha \dfrac{\partial \nabla \mathcal{J}\bs{\theta}_k}{\partial \theta^k}\\
+\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{\theta}^k} = \beta\bs{I} - \alpha \dfrac{\partial \nabla \mathcal{J}\bs{\theta}_k}{\partial \theta^k}\\
+\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{\theta}^k} = \beta\bs{I} - \alpha \bs{G}\bs{I}\\
+\end{align*}
+
+\begin{align*}
+\dfrac{\partial \bs{\theta}^{(k)}}{\partial \bs{p}^k} =  \dfrac{\partial \bs{\theta}^{k-1} + \bs{p}^k}{\partial \bs{p}^k} = \bs{I}
+ =  \bs{I} + \beta{I}  - \alpha\bs{G}\bs{I}
+\end{align*}
+
+\begin{align*}
+&\dfrac{\partial \bs{\theta}^{(k+1)}}{\partial \bs{p}^k} =  \dfrac{\partial \bs{\theta}^{k} + \bs{p}^{k+1}}{\partial \bs{p}^k} \\
+&= \beta\bs{I} - \alpha \bs{G}\bs{I}
+\end{align*}
+
+\begin{align*}
+\dfrac{\partial \bs{s}^{k+1}}{\partial \bs{s^k}} = \begin{bmatrix} \dfrac{\partial\bs{\theta^{(k+1)}} }{\partial \bs{\theta}^k} & \dfrac{\partial\bs{\theta^{(k+1)}} }{\partial \bs{p}^k} \\ \dfrac{\partial\bs{p^{(k+1)}} }{\partial \bs{\theta}^k} & \dfrac{\partial\bs{p^{(k+1)}} }{\partial \bs{p}^k}\end{bmatrix}
+\end{align*}
+
+\begin{align*}
+= \begin{bmatrix} \dfrac{\bs{I} + \beta{I} - \alpha\bs{G}\bs{I}} & \beta\bs{I} - \alpha \bs{G}\bs{I}\\ \beta\bs{I} - \alpha \bs{G}\bs{I} & \beta\bs{I} - \alpha \bs{G}\bs{I}\end{bmatrix}
+\end{align*}
+
+Taking the determinant of this matrix results in:
+\begin{align*}
+\beta\bs{I}-\alpha\bs{G}
+=\beta\bs{I}-\alpha \dfrac{\partial}{\partial\theta_{1}}\dfrac{\partial}{\partial\theta_{2}}\dfrac{\partial}{\partial\theta_{k}}%\dfrac{\partial}{\partial\theta_{2}}...\dfrac{\partial}{\partial\theta_{k}}
+\end{align*}
+\end{document}
