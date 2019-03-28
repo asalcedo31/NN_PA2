@@ -78,8 +78,8 @@
 \subsection{}
 
 1.Let $L{out}$ be the length of the output dimension (hieght or width), $L_{in}$ the length of the input dimenstion, $K$ as kernel size, $P$ as padding, $S$ as stride. 
-\begin{align*}
 \text{From the pytorch documentation:} \\
+\begin{align*}
 L_{out} = \frac{L_{in}-dialation(K -1) + 2P -1}{S} + 1\\
 \frac{L_{in}}{2} = \frac{L_{in} - (5-1)+2P -1}{2} +1\\
 L_{in} -2 = L_{in}-5-2P\\
@@ -93,7 +93,7 @@ L_{out} = \frac{L_{in}-dialation(K -1) + 2P -1}{S} + 1\\
 \frac{L_{in}}{4} = \frac{L_{in} - (5-1)+2P -1}{2} +1\\
 \frac{L_{in}}{2} -2 = L_{in}-5-2P\\
 \frac{3}{2}-\frac{L_{in}}{4} = P\\
-\text{If $L_{in}$ = 4}
+\text{If $L_{in}$ = 4}\\
 \frac{1}{2}=P
 \end{align*}
 Since a 5x5 kernel will not move across a 32x32 image symmetrically, these fractions can be approximated by rounding padding up to the nearest integer so P=2 for a two-fold reduction and P=1 for a four-fold size reduction.
@@ -102,7 +102,7 @@ Since a 5x5 kernel will not move across a 32x32 image symmetrically, these fract
 
 \begin{figure}[ht!]
  \subfloat[][Iteration 200 Windows emojis]
- [{
+ {
   \includegraphics[width=0.4\textwidth]{dcgan_w-000200.png}
   } 
 \subfloat[][Iteration 5000 Windows emojis]
@@ -118,6 +118,7 @@ Since a 5x5 kernel will not move across a 32x32 image symmetrically, these fract
   \includegraphics[width=0.4\textwidth]{dcgan-004800.png}
   } \hfill
 \end{figure}
+\clearpage
 For both Windows and Apple emojis sample detail improves during training. Both begin by learning that the emojis occupy the central region of each image and some of the colours often seen in emojis, and later learn boundaries and detail.The DC-GAN is able to learn very high quality Windows emojis after 5000 iterations with clear outlines which often include a high level of detail. It 
 learns lower quality Apple emojis which are less well defined and have less clear detail. This is likely because Apple emojis are more detailed and thus harder to learn so they are learned more slowly. Both learn people the best, likely because they are common in the training sets. 
 \section{} 
