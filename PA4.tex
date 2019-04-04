@@ -77,7 +77,7 @@
 \section{}
 \subsection{}
 
-1.Let $L{out}$ be the length of the output dimension (hieght or width), $L_{in}$ the length of the input dimenstion, $K$ as kernel size, $P$ as padding, $S$ as stride. 
+1.Let $L{out}$ be the length of the output dimension (height or width), $L_{in}$ the length of the input dimension, $K$ as kernel size, $P$ as padding, $S$ as stride. 
 \text{From the pytorch documentation:} \\
 \begin{align*}
 L_{out} = \frac{L_{in}-dialation(K -1) + 2P -1}{S} + 1\\
@@ -103,22 +103,22 @@ Since a 5x5 kernel will not move across a 32x32 image symmetrically, these fract
 \begin{figure}[ht!]
  \subfloat[][Iteration 200 Windows emojis]
  {
-  \includegraphics[width=0.4\textwidth]{dcgan_w-000200.png}
+  \includegraphics[width=0.35\textwidth]{dcgan_w-000200.png}
   } 
 \subfloat[][Iteration 5000 Windows emojis]
  {
-  \includegraphics[width=0.4\textwidth]{dcgan_w-005000.png}
+  \includegraphics[width=0.35\textwidth]{dcgan_w-005000.png}
   } \hfill
 \subfloat[][Iteration 1400 Apple emojis]
  {
-  \includegraphics[width=0.4\textwidth]{dcgan-001400.png}
+  \includegraphics[width=0.35\textwidth]{dcgan-001400.png}
   } 
 \subfloat[][Iteration 5000 Apple emojis]
  {
-  \includegraphics[width=0.4\textwidth]{dcgan-004800.png}
+  \includegraphics[width=0.35\textwidth]{dcgan-004800.png}
   } \hfill
 \end{figure}
-\clearpage
+% \clearpage
 For both Windows and Apple emojis sample detail improves during training. Both begin by learning that the emojis occupy the central region of each image and some of the colours often seen in emojis, and later learn boundaries and detail.The DC-GAN is able to learn very high quality Windows emojis after 5000 iterations with clear outlines which often include a high level of detail. It 
 learns lower quality Apple emojis which are less well defined and have less clear detail. This is likely because Apple emojis are more detailed and thus harder to learn so they are learned more slowly. Both learn people the best, likely because they are common in the training sets. 
 \section{} 
@@ -126,40 +126,62 @@ learns lower quality Apple emojis which are less well defined and have less clea
 \begin{figure}[ht!]
  \subfloat[][Iteration 200 X to Y]
  {
-  \includegraphics[width=0.4\textwidth]{cgan-000200-X-Y.png}
+  \includegraphics[width=0.35\textwidth]{cgan-000200-X-Y.png}
   } 
 \subfloat[][Iteration 10000 X to Y]
  {
-  \includegraphics[width=0.4\textwidth]{cgan-010000-X-Y.png}
+  \includegraphics[width=0.35\textwidth]{cgan-010000-X-Y.png}
   } \hfill
   \subfloat[][Iteration 200 Y to X]
   {
-   \includegraphics[width=0.4\textwidth]{cgan-000200-Y-X.png}
+   \includegraphics[width=0.35\textwidth]{cgan-000200-Y-X.png}
    } 
   \subfloat[][Iteration 10000 Y to X]
  {
-  \includegraphics[width=0.4\textwidth]{cgan-010000-Y-X.png}
+  \includegraphics[width=0.35\textwidth]{cgan-010000-Y-X.png}
   } \hfill
 \end{figure}
 \subsection{}
 \begin{figure}[ht!]
  \subfloat[][Iteration 200 X to Y]
  {
-  \includegraphics[width=0.4\textwidth]{cgan2-000200-X-Y.png}
+  \includegraphics[width=0.35\textwidth]{cgan2-000200-X-Y.png}
   } 
 \subfloat[][Iteration 10000 X to Y]
  {
-  \includegraphics[width=0.4\textwidth]{cgan2-010000-X-Y.png}
+  \includegraphics[width=0.35\textwidth]{cgan2-010000-X-Y.png}
   } \hfill
   \subfloat[][Iteration 200 Y to X]
   {
-   \includegraphics[width=0.4\textwidth]{cgan2-000200-Y-X.png}
+   \includegraphics[width=0.35\textwidth]{cgan2-000200-Y-X.png}
    } 
   \subfloat[][Iteration 10000 Y to X]
  {
-  \includegraphics[width=0.4\textwidth]{cgan2-010000-Y-X.png}
+  \includegraphics[width=0.35\textwidth]{cgan2-010000-Y-X.png}
+  } \hfill
+\end{figure}
+% \clearpage
+Reconstructions differ between seeds due to the instability of GAN training. Because the loss depends on the discriminator, which itself is being trained, we have no guarantee that any of the discriminators or generators have converged leading to a lack of reproducible results. Without optimal discriminators, gradient updates to the generators may not be meaningful (and vice-versa). The model itself also has many continuous parameters and operates in high-dimensional space which further hinders convergence and consistency between runs. Additionally, the loss surface is likely to be highly non-convex with many local optima and saddle points. 
+\subsection{}
+\begin{figure}[ht!]
+ \subfloat[][Iteration 200 X to Y]
+ {
+  \includegraphics[width=0.35\textwidth]{cgan_nlam-000200-X-Y.png}
+  } 
+\subfloat[][Iteration 10000 X to Y]
+ {
+  \includegraphics[width=0.35\textwidth]{cgan_nlam-010000-X-Y.png}
+  } \hfill
+  \subfloat[][Iteration 200 Y to X]
+  {
+   \includegraphics[width=0.35\textwidth]{cgan_nlam-000200-Y-X.png}
+   } 
+  \subfloat[][Iteration 10000 Y to X]
+ {
+  \includegraphics[width=0.35\textwidth]{cgan_nlam-010000-Y-X.png}
   } \hfill
 \end{figure}
 
+Images generated without cycle consistency loss are of noticeably poorer quality. Without cycle consistency loss, images from Apple to Windows emojis often lack appropriate colours or show distorted shapes, even after 10000 iterations. Images transferring Windows emojis to Apple emojis are extremely poor and either only capture the basic shape of the emoji or seem like random noise. These results highlight the importance in cycle consistency loss for enforcing that CycleGANs find meaningful mappings between the two domains. Without enforcing cycle consistency, the model is under-constrained and can find a mapping to the target domain which the discriminator identifies as the target domain but that does not preserve the features of the initial image. This can also manifest as node collapse where the generator maps all images to a small and trivial space in the target domain. Both of these factors can explain the poor quality reconstructions, especially for transferring Windows emojis to Apple style. 
 \end{document}
 

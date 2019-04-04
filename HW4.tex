@@ -96,60 +96,80 @@
 \end{align*}
 \subsection{}
 \begin{align*}
-\widebar{w_{ix}} = \Sigma_{t=1}^{t}\widebar{i^{(t)}}\sigma'(w_{ix}x^{(t)}+w_{ih}h^{(t-1)})x^{(t)}
+\widebar{w_{ix}} = \Sigma_{t=1}^{T}\widebar{i^{(t)}}\sigma'(w_{ix}x^{(t)}+w_{ih}h^{(t-1)})x^{(t)}
 \end{align*}
 
 \section{}
 \subsection{}
-The architecture has ( HxD + HxH + HxH) weights at each time step that are shared across all time steps so it is O(HxD). At each time step the arithmetic operations are $(\phi\big ( O((HD))G^2 + O((HH)G^2) + O((HH)G^2) \big))$ and is of O((H x H x D)$G^2)$.
+The architecture has ( HD + HH + HH) weights at each time step that are shared across all time steps so the number of weights is O(HD+2HH). At each time step the arithmetic operations are $(\phi\big ( O((HD)G^2) + O((HH)G^2) + O((HH)G^2) \big))$ and is of O((2HH x HD)$G^2)$.
 \subsection{}
-A minimum of G+G-1 steps are needed to compute the hidden activations. This can be achieved by starting at the upper left hand corner of the image. At the next time step, all activations adjacent to it can be computed simultaneously as they are independent given the activation computed at the previous time step. If all the activations are computed in this fashion, proceeding in diagonal "stripes" from the upper left hand corner of the hidden laer to the lower right hand corner, it would take G + G -1 step to compute all the activations. 
+A minimum of G+G-1 steps are needed to compute the hidden activations. This can be achieved by starting at the upper left hand corner of the image. At the next time step, all activations adjacent to it can be computed simultaneously as they are independent given the activation computed at the previous time step. If all the activations are computed in this fashion, proceeding in diagonal "stripes" from the upper left hand corner of the hidden layer to the lower right hand corner, it would take G + G -1 step to compute all the activations. 
 
 \subsection{}
-One advantage of the MDRNN is that it can learn dependencies from left to right on an image which can be useful in some applications such as cursive handwriting recognition. One disadvantage is that the context of a hidden activation is limited to the area of the image to the left and above it, and so it cannot learn higher level features that can span the full image like conv nets can. 
+One advantage of the MDRNN is that it can learn dependencies from left to right on an image which can be useful for recognizing objects in left to right sequences such as characters in unsegmented cursive sentences. One disadvantage is that the context of a hidden activation is limited to the area of the image to the left and above it, and so it cannot learn higher level features that can span the full image like conv nets can. 
 
 \section{}
 \subsection{a}
 
+\begin{align*}
+\begin{bmatrix} \bs{I} & \bs{-I}\\ \bs{0} & \bs{I} \end{bmatrix} \begin{bmatrix} \bs{\theta^{k+1}}\\ \bs{p^{k+1}}\end{bmatrix} = \begin{bmatrix} \bs{I} & \bs{0}\\ -\alpha\bs{\nabla\mathcal{J}} & \beta\bs{I}\end{bmatrix} \begin{bmatrix} \bs{\theta^{k}}\\ \bs{p^{k}}\end{bmatrix}\\
+\text{defining $\bs{G}$ as a diagonal operator matrix of derivatives}\\
+\begin{bmatrix} \bs{I} & \bs{-I}\\ \bs{0} & \bs{I} \end{bmatrix} \begin{bmatrix} \bs{\theta^{k+1}}\\ \bs{p^{k+1}}\end{bmatrix} = \begin{bmatrix} \bs{I} & \bs{0}\\ -\alpha\bs{G} & \beta\bs{I}\end{bmatrix} \begin{bmatrix} \bs{\theta^{k}}\\ \bs{p^{k}}\end{bmatrix}\\
+\underbrace{\begin{bmatrix} \bs{I} & \bs{0}\\ -\alpha\bs{G} & \beta\bs{I}\end{bmatrix}^{-1}\begin{bmatrix} \bs{I} & \bs{-I}\\ \bs{0} & \bs{I} \end{bmatrix} \begin{bmatrix} \bs{\theta^{k+1}}\\ \bs{p^{k+1}}\end{bmatrix}}_\text{$f^{-1}(\bs{\theta^{k+1}},\bs{p^{k+1}})$} = \underbrace{ \begin{bmatrix} \bs{\theta^{k}}\\ \bs{p^{k}}\end{bmatrix}}_\text{$f(\bs{\theta^{k}},\bs{p^{k}})$}
+\end{align*}
+% \frac{1}{\beta}\underbrace{\begin{bmatrix} \beta & \bs{0}\\ \alpha\bs{G} & \bs{I} \end{bmatrix}\begin{bmatrix} \bs{I} & \bs{-I}\\ \bs{0} & \bs{I} \end{bmatrix} \begin{bmatrix} \bs{\theta^{k+1}}\\ \bs{p^{k+1}}\end{bmatrix}}_\text{$f^{-1}(\bs{\theta^{k+1}},\bs{p^{k+1}})$} = \underbrace{\begin{bmatrix} \bs{I} & \bs{0}\\ -\alpha\bs{G} & \beta\end{bmatrix} \begin{bmatrix} \bs{\theta^{k}}\\ \bs{p^{k}}\end{bmatrix}}_\text{$f(\bs{\theta^{k}},\bs{p^{k}})$}\\
+
 \subsection{b}
 \begin{align*}
-\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{p}^k} = \beta \bs{I} - \alpha \dfrac{\partial \nabla \mathcal{J}\bs{\theta}_k}{\partial \bs{p}^k}\\
-\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{p}^k} = \beta\bs{I} - \alpha \bs{G}\dfrac{\partial \bs{\theta}_k}{\partial \bs{p}^k}\\
-\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{p}^k} = \beta\bs{I} - \alpha \bs{G}\bs{I}
+&\begin{bmatrix} \bs{I} & \bs{-I}\\ \bs{0} & \bs{I} \end{bmatrix} \begin{bmatrix} \bs{\theta^{k+1}}\\ \bs{p^{k+1}}\end{bmatrix} = \begin{bmatrix} \bs{I} & \bs{0}\\ -\alpha\bs{G} & \beta\bs{I}\end{bmatrix} \begin{bmatrix} \bs{\theta^{k}}\\ \bs{p^{k}}\end{bmatrix}\\
+&\dfrac{\partial \bs{s}^{k+1}}{\partial \bs{s}^{k}} = \begin{bmatrix} \bs{I} & \bs{-I}\\ \bs{0} & \bs{I} \end{bmatrix}^{-1} \begin{bmatrix} \bs{I} & \bs{0}\\ -\alpha\bs{G} & \beta\bs{I}\end{bmatrix} \dfrac{\partial \bs{s}^{k}}{\partial \bs{s}^{k}}\\
+&\dfrac{\partial \bs{s}^{k+1}}{\partial \bs{s}^{k}} = \begin{bmatrix} \bs{I} & \bs{-I}\\ \bs{0} & \bs{I} \end{bmatrix}^{-1} \begin{bmatrix} \bs{I} & \bs{0}\\ -\alpha\bs{G} & \beta\bs{I}\end{bmatrix} \bs{I}\\
+&\text{With the product rule of determinants:}\\
+&\det \dfrac{\partial \bs{s}^{k+1}}{\partial \bs{s}^{k}} = \det\begin{bmatrix} \bs{I} & \bs{-I}\\ \bs{0} & \bs{I} \end{bmatrix}^{-1} \det\begin{bmatrix} \bs{I} & \bs{0}\\ -\alpha\bs{G} & \beta\bs{I}\end{bmatrix} \\
+&\det \dfrac{\partial \bs{s}^{k+1}}{\partial \bs{s}^{k}} = \frac{1}{\det \begin{bmatrix} \bs{I} & \bs{-I}\\ \bs{0} & \bs{I} \end{bmatrix}} \det\begin{bmatrix} \bs{I} & \bs{0}\\ -\alpha\bs{G} & \beta\bs{I}\end{bmatrix} \\
+&\text{using the property that the determinant of an upper triangular matrix is the product of the diagonals:}\\
+&\det \dfrac{\partial \bs{s}^{k+1}}{\partial \bs{s}^{k}} = 1\beta^N =\beta^N \\
 \end{align*}
 
-\begin{align*}
-\dfrac{\partial \bs{\theta}^{(k+1)}}{\partial \bs{\theta}^k} =  \bs{I} + \dfrac{\partial \bs{p}^k}{\partial \bs{\theta}^k}\\
-\dfrac{\partial \bs{\theta}^{(k+1)}}{\partial \bs{\theta}^k} =  \bs{I}  - \alpha\bs{G}\bs{I}\\
-\end{align*}
 
-\begin{align*}
-\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{\theta}^k} = \beta (\bs{\theta}^k-\bs{\theta}^{k-1}) - \alpha \dfrac{\partial \nabla \mathcal{J}\bs{\theta}_k}{\partial \theta^k}\\
-\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{\theta}^k} = \beta\bs{I} - \alpha \dfrac{\partial \nabla \mathcal{J}\bs{\theta}_k}{\partial \theta^k}\\
-\dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{\theta}^k} = \beta\bs{I} - \alpha \bs{G}\bs{I}\\
-\end{align*}
+% \begin{align*}
+% \dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{p}^k} = \beta \bs{I} - \alpha \dfrac{\partial \nabla \mathcal{J}\bs{\theta}_k}{\partial \bs{p}^k}\\
+% \dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{p}^k} = \beta\bs{I} - \alpha \bs{G}\dfrac{\partial \bs{\theta}_k}{\partial \bs{p}^k}\\
+% \dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{p}^k} = \beta\bs{I} - \alpha \bs{G}\bs{I}
+% \end{align*}
 
-\begin{align*}
-\dfrac{\partial \bs{\theta}^{(k)}}{\partial \bs{p}^k} =  \dfrac{\partial \bs{\theta}^{k-1} + \bs{p}^k}{\partial \bs{p}^k} = \bs{I}
- =  \bs{I} + \beta{I}  - \alpha\bs{G}\bs{I}
-\end{align*}
+% \begin{align*}
+% \dfrac{\partial \bs{\theta}^{(k+1)}}{\partial \bs{\theta}^k} =  \bs{I} + \dfrac{\partial \bs{p}^k}{\partial \bs{\theta}^k}\\
+% \dfrac{\partial \bs{\theta}^{(k+1)}}{\partial \bs{\theta}^k} =  \bs{I}  - \alpha\bs{G}\bs{I}\\
+% \end{align*}
 
-\begin{align*}
-&\dfrac{\partial \bs{\theta}^{(k+1)}}{\partial \bs{p}^k} =  \dfrac{\partial \bs{\theta}^{k} + \bs{p}^{k+1}}{\partial \bs{p}^k} \\
-&= \beta\bs{I} - \alpha \bs{G}\bs{I}
-\end{align*}
+% \begin{align*}
+% \dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{\theta}^k} = \beta (\bs{\theta}^k-\bs{\theta}^{k-1}) - \alpha \dfrac{\partial \nabla \mathcal{J}\bs{\theta}_k}{\partial \theta^k}\\
+% \dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{\theta}^k} = \beta\bs{I} - \alpha \dfrac{\partial \nabla \mathcal{J}\bs{\theta}_k}{\partial \theta^k}\\
+% \dfrac{\partial \bs{p}^{(k+1)}}{\partial \bs{\theta}^k} = \beta\bs{I} - \alpha \bs{G}\bs{I}\\
+% \end{align*}
 
-\begin{align*}
-\dfrac{\partial \bs{s}^{k+1}}{\partial \bs{s^k}} = \begin{bmatrix} \dfrac{\partial\bs{\theta^{(k+1)}} }{\partial \bs{\theta}^k} & \dfrac{\partial\bs{\theta^{(k+1)}} }{\partial \bs{p}^k} \\ \dfrac{\partial\bs{p^{(k+1)}} }{\partial \bs{\theta}^k} & \dfrac{\partial\bs{p^{(k+1)}} }{\partial \bs{p}^k}\end{bmatrix}
-\end{align*}
+% \begin{align*}
+% \dfrac{\partial \bs{\theta}^{(k)}}{\partial \bs{p}^k} =  \dfrac{\partial \bs{\theta}^{k-1} + \bs{p}^k}{\partial \bs{p}^k} = \bs{I}
+%  =  \bs{I} + \beta{I}  - \alpha\bs{G}\bs{I}
+% \end{align*}
 
-\begin{align*}
-= \begin{bmatrix} \dfrac{\bs{I} + \beta{I} - \alpha\bs{G}\bs{I}} & \beta\bs{I} - \alpha \bs{G}\bs{I}\\ \beta\bs{I} - \alpha \bs{G}\bs{I} & \beta\bs{I} - \alpha \bs{G}\bs{I}\end{bmatrix}
-\end{align*}
+% \begin{align*}
+% &\dfrac{\partial \bs{\theta}^{(k+1)}}{\partial \bs{p}^k} =  \dfrac{\partial \bs{\theta}^{k} + \bs{p}^{k+1}}{\partial \bs{p}^k} \\
+% &= \beta\bs{I} - \alpha \bs{G}\bs{I}
+% \end{align*}
 
-Taking the determinant of this matrix results in:
-\begin{align*}
-\beta\bs{I}-\alpha\bs{G}
-=\beta\bs{I}-\alpha \dfrac{\partial}{\partial\theta_{1}}\dfrac{\partial}{\partial\theta_{2}}\dfrac{\partial}{\partial\theta_{k}}%\dfrac{\partial}{\partial\theta_{2}}...\dfrac{\partial}{\partial\theta_{k}}
-\end{align*}
+% \begin{align*}
+% \dfrac{\partial \bs{s}^{k+1}}{\partial \bs{s^k}} = \begin{bmatrix} \dfrac{\partial\bs{\theta^{(k+1)}} }{\partial \bs{\theta}^k} & \dfrac{\partial\bs{\theta^{(k+1)}} }{\partial \bs{p}^k} \\ \dfrac{\partial\bs{p^{(k+1)}} }{\partial \bs{\theta}^k} & \dfrac{\partial\bs{p^{(k+1)}} }{\partial \bs{p}^k}\end{bmatrix}
+% \end{align*}
+
+% \begin{align*}
+% = \begin{bmatrix} \dfrac{\bs{I} + \beta{I} - \alpha\bs{G}\bs{I}} & \beta\bs{I} - \alpha \bs{G}\bs{I}\\ \beta\bs{I} - \alpha \bs{G}\bs{I} & \beta\bs{I} - \alpha \bs{G}\bs{I}\end{bmatrix}
+% \end{align*}
+
+% Taking the determinant of this matrix results in:
+% \begin{align*}
+% \beta\bs{I}-\alpha\bs{G}
+% =\beta\bs{I}-\alpha \dfrac{\partial}{\partial\theta_{1}}\dfrac{\partial}{\partial\theta_{2}}\dfrac{\partial}{\partial\theta_{k}}%\dfrac{\partial}{\partial\theta_{2}}...\dfrac{\partial}{\partial\theta_{k}}
+% \end{align*}
 \end{document}
