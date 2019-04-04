@@ -1,0 +1,122 @@
+\documentclass[12pt,letterpaper]{article} % script-article class - I like this better than article
+\usepackage[margin=0.75in]{geometry}
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+
+\usepackage{helvet}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{mathtools}
+\usepackage{amssymb,amsmath}
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays \left(eg matrices\right) in math
+\usepackage{paralist} % very flexible & customisable lists \left(eg. enumerate/itemize, etc.\right)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+%\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+%\usepackage{caption}
+\usepackage{fixltx2e}% this might give you a warning; ignore it
+%\usepackage{dblfloatfix}
+\usepackage{float}
+\usepackage{bbm}
+\usepackage[space]{grffile}
+\usepackage[section]{placeins}
+\usepackage[justification=justified,singlelinecheck=false]{caption}
+\usepackage{pdflscape}
+\captionsetup[figure]{labelformat=empty}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usetikzlibrary{calc}
+\pagenumbering{gobble}
+\usepackage{array}
+\usepackage{adjustbox}
+\usetikzlibrary{positioning,fit}
+\geometry{letterpaper,margin=0.5in}
+\newcommand\addvmargin[1]{
+  \node[fit=(current bounding box),inner ysep=#1,inner xsep=0]{};
+}
+
+
+\newcommand{\bs}[1]{\bm{\mathrm{#1}}} % always use this custom command when you want to use boldface font in a math (equation, $__$ etc.) environment.
+\newcommand{\switch}[0]{\mathbbm{1}\{y_k=k\}}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\sumj}{\sum_j}
+
+% the following are custom commands for quickly writing derivatives and partial derivatives
+\newcommand{\ddt}[1]{\ensuremath{\dfrac{d#1}{dt}}}
+\newcommand{\ddx}[1]{\ensuremath{\dfrac{d#1}{dx}}}
+\newcommand{\ddy}[1]{\ensuremath{\dfrac{d#1}{dy}}}
+\newcommand{\ddz}[1]{\ensuremath{\dfrac{d#1}{dz}}}
+
+\newcommand{\pardt}[1]{\ensuremath{\dfrac{\partial#1}{\partial t}}}
+\newcommand{\pardx}[1]{\ensuremath{\dfrac{\partial#1}{\partial x}}}
+\newcommand{\pardy}[1]{\ensuremath{\dfrac{\partial#1}{\partial y}}}
+\newcommand{\pardz}[1]{\ensuremath{\dfrac{\partial#1}{\partial z}}}
+
+\newcommand{\pardtsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial t^2}}}
+\newcommand{\pardxsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial x^2}}}
+\newcommand{\pardysq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial y^2}}}
+\newcommand{\pardzsq}[1]{\ensuremath{\dfrac{\partial^2#1}{\partial z^2}}}
+
+\newcommand{\curl}[1]{\ensuremath{\nabla\times\bs{#1}}}
+
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+
+%opening
+
+\title{\Large Homework 5}
+\author{\large Adriana Salcedo}
+\date{\large \today}
+
+\begin{document}
+\maketitle
+\section{}
+\subsection{}
+
+\begin{align*}
+\mathcal{F}(q) = E_{q}[log(p(\bs{x} | \bs{z})] - D_{KL}(q(\bs{z}) || p(\bs{z})) \\
+= E_q[log(p(\bs{x} | \bs{z}))] - E_q[log(q(\bs{z})) - log(p(\bs{z}))]\\
+= E_q[log(p(\bs{x} | \bs{z}))] - E_q [log(q(\bs{z})) - log(p(\bs{z}))]\\
+= E_q [log(\frac{p(\bs{z} | \bs{x})p(\bs{x})}{p(\bs{z})})] - E_q [log(q(\bs{z})) - log(p(\bs{z}))]\\
+= E_q [log(p(\bs{z} | \bs{x})) + log(p(\bs{x}))-log(p(\bs{z}))] - E_q [log(q(\bs{z})) - log(p(\bs{z}))]\\
+=  log(p(\bs{x}) + E_q  [log(p(\bs{z} | \bs{x})) -log( p(\bs{z}))] - E_q [log(q(\bs{z})) - log(p(\bs{z}))]\\
+= log(p(\bs{x})) + E_q  [log(p(\bs{z} | \bs{x})) -log( p(\bs{z})) - (log(q(\bs{z})) - log(p(\bs{z}))))\\
+=  log(p(\bs{x})) + E_q  [log(p(\bs{z} | \bs{x}))  - log(q(\bs{z})) \\
+=  log(p(\bs{x})) - E_q  [log(q(\bs{z}) - log(p(\bs{z} | \bs{x}))] \\
+= log(p(\bs{x})) - D_{KL}(q(\bs{z}) || p(\bs{z}|\bs{x}))\\
+\end{align*}
+\subsection{}
+\begin{align*}
+D_{KL}(q(\bs{z}) || p(\bs{z})) = E_q[log(q(\bs{z})) - log(p(\bs{z}))]\\
+= E_q[log(\prod_{i=1}^dq(z_i)) - log(\prod_{i=1}^dp(z_i))]\\
+= E_q[\sum_{i=1}^d[log(q(z_i)) - log(p(z_i))]]\\
+\text{By the linearity of expectations:}\\
+= \sum_{i=1}^d[E_q[log(q(z_i)) - log(p(z_i))]]\\
+= \sum_{i=1}^d[D_{KL}(q(z_i) || p(z_i))]\\
+% = \int\q(\bs{z\sum_{i=1}^d[log(q(z_i)) - log(p(z_i))]]\\
+\end{align*}
+\subsection{}
+\begin{align*}
+D_{KL}(q(z_i) || p(z_i)) = E_q[log(q(z_i)) - log(p(z_i))]\\
+= E_q[log(\frac{1}{\sigma\sqrt{2\pi}}exp(-\frac{(z-\mu)^2}{2\sigma^2}) - log(\frac{1}{\sqrt{2\pi}}exp(-\frac{z^2}{2}))]\\
+= E_q[log(\frac{1}{\sigma\sqrt{2\pi}})-\frac{(z-\mu)^2}{2\sigma^2} - log(\frac{1}{\sqrt{2\pi}})-\frac{z^2}{2})]\\
+= E_q[log(\frac{1}{\sigma\sqrt{2\pi}}) - log(\frac{1}{\sqrt{2\pi}})-\frac{(z-\mu)^2}{2\sigma^2} -\frac{z^2}{2})]\\
+= E_q[-log(\frac{\sigma\sqrt{2\pi}}{\sqrt{2\pi}})-\frac{(z-\mu)^2}{2\sigma^2} -\frac{z^2}{2})]\\
+= E_q[-log(\sigma)-\frac{1}{2\sigma^2}(z^2-2z\mu+\mu^2 - z^2\sigma^2)]\\
+= -log(\sigma)-\frac{1}{2\sigma^2}(E_q[z^2]-E_q[z]2\mu+E_q[\mu^2]-E_q[z^2]\sigma^2)\\
+= -log(\sigma)-\frac{1}{2\sigma^2}(\mu^2 + \sigma^2 -2\mu^2+\mu^2-(\mu^2 + \sigma^2)\sigma^2)]\\
+= -log(\sigma)-\frac{1}{2\sigma^2}(\mu^2 + \sigma^2 -2\mu^2+\mu^2 - \mu^2\sigma^2-\sigma^4)]\\
+= -log(\sigma)-\frac{1}{2\sigma^2}(\sigma^2 - \mu^2\sigma^2-\sigma^4)]\\
+= -log(\sigma)-\frac{1}{2}(1 - \mu^2-\sigma^2)]\\
+= -log(\sigma)+\frac{1}{2}(\mu^2+\sigma^2 - 1)]\\
+\end{align*}
+
+\subsection{}
+\begin{align*}
+\widebar{t_i} = 1\\
+\widebar{r_i} = \widebar{t_i}\dfrac{\partial}
+\end{document}
